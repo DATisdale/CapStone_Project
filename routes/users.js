@@ -1,4 +1,4 @@
-const { User, validateLogin, validateUser } = require("../models/user");
+const { User, validateLogin, validateUser, } = require("../models/user");
 
 const auth = require("../middleware/auth");
 const admin = require("../middleware/admin");
@@ -6,6 +6,8 @@ const admin = require("../middleware/admin");
 const bcrypt = require("bcrypt");
 const express = require("express");
 const router = express.Router();
+
+const{Profile, validateProfile}=require("../models/user")
 
 //* POST register a new user
 router.post("/register", async (req, res) => {
@@ -21,6 +23,8 @@ router.post("/register", async (req, res) => {
     user = new User({
       name: req.body.name,
       email: req.body.email,
+      height: req.body.height,
+      weight: req.body.weight,
       password: await bcrypt.hash(req.body.password, salt),
       isAdmin: req.body.isAdmin,
     });
@@ -99,6 +103,24 @@ router.get('/profile', [auth], async(req,res)=>{
   const user = await User.findById(req.user._id);
   return res.send(user)
 })
+
+router.post("/create-profile", [auth], async (req, res) => {
+  try {
+      const user = await User.findById(req.user._id);
+      
+      let profile = new Profile(req.body);
+      const { error } = validateProfile(req.body);
+      if (error) 
+          return res.status(400).send(error);
+      user.create-profile.push(profile);
+      
+      await user.save();
+      return res.send(user);
+  }   catch (ex) {
+      return res.status(500).send(`Internal Server Error: ${ex}`)
+  }
+})
+
 
 
 module.exports = router;

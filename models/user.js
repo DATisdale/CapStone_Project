@@ -3,8 +3,11 @@ const Joi = require("joi");
 const jwt = require("jsonwebtoken");
 const config = require("config");
 
+
 const userSchema = mongoose.Schema({
   name: { type: String, required: true, minLength: 5, maxLength: 50 },
+  height: { type: String, required : true, minLength:3, maxLength:50},
+  weight: { type: String, required : true, minLength:3, maxLength:50},
   email: {
     type: String,
     unique: true,
@@ -34,6 +37,8 @@ const validateUser = (user) => {
     email: Joi.string().min(5).max(255).required().email(),
     password: Joi.string().min(5).max(1024).required(),
     isAdmin: Joi.bool().required(),
+    height: Joi.string().min(3).max(50).required(),
+    weight: Joi.string().min(3).max(50).required(),
   });
   return schema.validate(user);
 };
@@ -46,16 +51,10 @@ const validateLogin = (req) => {
   return schema.validate(req);
 };
 
-const profileSchema = mongoose.Schema({
-  name: { type: String, required: true, minLength:5, maxLength: 50},
-  height: { type: String, required : true, minLength:3, maxLength:4},
-  wieght: { type: String, required : true, minLength:2, maxLength:3},
 
-})
 
 const User = mongoose.model("User", userSchema);
 module.exports.User = User;
 module.exports.userSchema = userSchema;
-module.exports.profileSchema =profileSchema
 module.exports.validateUser = validateUser;
 module.exports.validateLogin = validateLogin;
