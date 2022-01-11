@@ -1,5 +1,4 @@
 const { User, validateLogin, validateUser, } = require("../models/user");
-
 const auth = require("../middleware/auth");
 const admin = require("../middleware/admin");
 
@@ -11,6 +10,7 @@ const{Profile, validateProfile}=require("../models/user")
 
 //* POST register a new user
 router.post("/register", async (req, res) => {
+  console.log(req.body)
   try {
     const { error } = validateUser(req.body);
     if (error) return res.status(400).send(error.details[0].message);
@@ -72,6 +72,7 @@ router.post("/login", async (req, res) => {
 router.get("/", async (req, res) => {
   try {
     const users = await User.find();
+    console.log(users)
     return res.send(users);
   } catch (ex) {
     return res.status(500).send(`Internal Server Error: ${ex}`);
