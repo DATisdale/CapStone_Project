@@ -47,7 +47,7 @@ router.post("/copy", [auth], async (req,res) =>{
 
  
 router.get("/", [auth], async (req, res)=>{
-    const workouts = await Workout.find({userId:req.user._id})
+    const workouts = await Workout.find({userId:req.user._id}).sort({date: 1})
     return res.send(workouts)
 })
 
